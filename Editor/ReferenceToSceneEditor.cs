@@ -37,6 +37,10 @@ namespace SceneReference
             _target.sceneGuid = guid.ToString();
 
             AssetRenamer.RenameAsset(_target, scene.name + " Reference");
+
+            EditorUtility.SetDirty(_target);
+
+            AssetDatabase.SaveAssetIfDirty(_target);
         }
 
         private void GetSceneNameByGUID()

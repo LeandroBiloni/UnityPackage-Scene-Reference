@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Utilities.AssetDatabaseUtils;
@@ -8,7 +9,7 @@ namespace SceneReference
     {
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
-            bool assetModified = false;
+            List<ReferenceToScene> references = new List<ReferenceToScene>();
 
             foreach (string assetPath in movedAssets)
             {
@@ -45,13 +46,15 @@ namespace SceneReference
 
                     EditorUtility.SetDirty(sceneReference);
 
-                    assetModified = true;
+                    references.Add(sceneReference);
                     break;
                 }
             }
 
-            if (assetModified)
-                AssetDatabase.SaveAssets();
+            foreach (var r in references)
+            {
+                AssetDatabase.SaveAssetIfDirty(r);
+            }
         }
 
         private static ReferenceToScene GetReferenceToSceneFromGuid(string guid)
