@@ -41,6 +41,8 @@ namespace SceneReference
             EditorUtility.SetDirty(_target);
 
             AssetDatabase.SaveAssetIfDirty(_target);
+
+            _sceneAsset = null;
         }
 
         private void GetSceneNameByGUID()
