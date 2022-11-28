@@ -1,0 +1,13 @@
+{
+  "name": "com.leandro_biloni.scene_reference",
+  "version": "1.0.0",
+  "displayName": "Scene Reference",
+  "description": "Custom Package to save a reference to the name of a scene and update it easily when scene name changes.",
+  "keywords": [],
+  "author": {
+    "name": "Leandro Biloni",
+    "email": "",
+    "url": "https://github.com/LeandroBiloni/Unity-Package---Scene-Reference"
+  },
+  "type": "tool"
+}
