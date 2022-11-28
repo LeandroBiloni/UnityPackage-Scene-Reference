@@ -8,6 +8,8 @@ namespace SceneReference
     {
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
+            bool assetModified = false;
+
             foreach (string assetPath in movedAssets)
             {
                 Object asset = AssetDatabase.LoadAssetAtPath(assetPath, typeof(SceneAsset));
@@ -31,22 +33,25 @@ namespace SceneReference
                     if (sceneReference == null) 
                         continue;
 
-                    if (sceneReference.SceneGUID != sceneGuid.ToString())
+                    if (sceneReference.sceneGuid != sceneGuid.ToString())
                         continue;
                     
                     AssetRenamer.RenameAsset(sceneReference, scene.name + " Reference");
 
                     sceneReference = GetReferenceToSceneFromGuid(guid);
 
-                    sceneReference.SetSceneName(scene.name);
-                    sceneReference.SetGUID(sceneGuid.ToString());
+                    sceneReference.sceneName = scene.name;
+                    sceneReference.sceneGuid = sceneGuid.ToString();
 
                     EditorUtility.SetDirty(sceneReference);
-                    
-                    AssetDatabase.SaveAssets();
+
+                    assetModified = true;
                     break;
                 }
             }
+
+            if (assetModified)
+                AssetDatabase.SaveAssets();
         }
 
         private static ReferenceToScene GetReferenceToSceneFromGuid(string guid)

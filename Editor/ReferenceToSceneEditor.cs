@@ -33,15 +33,15 @@ namespace SceneReference
 
             GUID guid = AssetDatabase.GUIDFromAssetPath(sceneAssetPath);
 
-            _target.SetSceneName(scene.name);
-            _target.SetGUID(guid.ToString());
+            _target.sceneName = scene.name;
+            _target.sceneGuid = guid.ToString();
 
             AssetRenamer.RenameAsset(_target, scene.name + " Reference");
         }
 
         private void GetSceneNameByGUID()
         {
-            string guid = _target.SceneGUID;
+            string guid = _target.sceneGuid;
             if (string.IsNullOrEmpty(guid))
             {
                 Debug.LogError("There is no guid stored!");
