@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEditor;
 using Utilities.AssetDatabaseUtils;
@@ -69,3 +71,4 @@ namespace SceneReference
         }
     }
 }
+#endif
