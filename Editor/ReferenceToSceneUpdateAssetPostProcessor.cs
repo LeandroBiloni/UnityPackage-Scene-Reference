@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Utilities.AssetDatabaseUtils;
+using SceneReference.Utils;
 
 namespace SceneReference
 {
@@ -43,8 +43,7 @@ namespace SceneReference
 
                     sceneReference = GetReferenceToSceneFromGuid(guid);
 
-                    sceneReference.sceneName = scene.name;
-                    sceneReference.sceneGuid = sceneGuid.ToString();
+                    sceneReference.Configure(scene.name, sceneGuid.ToString());
 
                     EditorUtility.SetDirty(sceneReference);
 

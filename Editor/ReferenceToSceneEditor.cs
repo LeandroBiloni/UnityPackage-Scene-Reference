@@ -2,7 +2,8 @@
 
 using UnityEngine;
 using UnityEditor;
-using Utilities.AssetDatabaseUtils;
+using SceneReference.Utils;
+using System.Collections.Generic;
 
 namespace SceneReference
 {
@@ -11,17 +12,19 @@ namespace SceneReference
     {
         private SceneAsset _sceneAsset;
         private ReferenceToScene _target;
-
         private void OnEnable()
         {
             _target = (ReferenceToScene)target;
+
         }
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            _sceneAsset = EditorGUILayout.ObjectField("Scene", _sceneAsset, typeof(SceneAsset), false) as SceneAsset;
+            EditorGUILayout.LabelField("Scene GUID ", _target.sceneGuid);
 
+            _sceneAsset = EditorGUILayout.ObjectField("Config from Scene", _sceneAsset, typeof(SceneAsset), false) as SceneAsset;
+                        
             if (_sceneAsset != null)
                 SetSceneDataToReference(_sceneAsset);
 
@@ -35,16 +38,23 @@ namespace SceneReference
 
             GUID guid = AssetDatabase.GUIDFromAssetPath(sceneAssetPath);
 
-            _target.sceneName = scene.name;
-            _target.sceneGuid = guid.ToString();
+            if (GUIDChecker.ExistsAnotherSceneReferenceWithSameGUID(guid.ToString()))
+            {
+                Debug.LogError("Another Reference to Scene " + scene.name + " (GUID: " + guid.ToString() + ") already exists!");
 
-            AssetRenamer.RenameAsset(_target, scene.name + " Reference");
+                _sceneAsset = null;
+                return;
+            }
+
+            _target.Configure(scene.name, guid.ToString());                
 
             EditorUtility.SetDirty(_target);
 
             AssetDatabase.SaveAssetIfDirty(_target);
 
             _sceneAsset = null;
+
+            AssetRenamer.RenameAsset(_target, scene.name + " Reference");
         }
 
         private void GetSceneNameByGUID()
