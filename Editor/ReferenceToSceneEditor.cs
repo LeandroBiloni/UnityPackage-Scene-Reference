@@ -3,7 +3,6 @@
 using UnityEngine;
 using UnityEditor;
 using SceneReference.Utils;
-using System.Collections.Generic;
 
 namespace SceneReference
 {
@@ -16,6 +15,10 @@ namespace SceneReference
         {
             _target = (ReferenceToScene)target;
 
+            if (!string.IsNullOrEmpty(_target.sceneGuid))
+            {
+                _sceneAsset = GetSceneAsset(_target.sceneGuid);
+            }
         }
         public override void OnInspectorGUI()
         {
@@ -23,12 +26,12 @@ namespace SceneReference
 
             EditorGUILayout.LabelField("Scene GUID ", _target.sceneGuid);
 
-            _sceneAsset = EditorGUILayout.ObjectField("Config from Scene", _sceneAsset, typeof(SceneAsset), false) as SceneAsset;
+            _sceneAsset = EditorGUILayout.ObjectField("Scene", _sceneAsset, typeof(SceneAsset), false) as SceneAsset;
                         
-            if (_sceneAsset != null)
+            if (_sceneAsset != null && _sceneAsset.name != _target.sceneName)
                 SetSceneDataToReference(_sceneAsset);
 
-            if (GUILayout.Button("Get Scene Name by GUID"))
+            if (GUILayout.Button(new GUIContent("Get Scene Name by GUID", "Use when the scene name in the scriptable object was manually changed.")))
                 GetSceneNameByGUID();
         }
 
@@ -40,9 +43,10 @@ namespace SceneReference
 
             if (GUIDChecker.ExistsAnotherSceneReferenceWithSameGUID(guid.ToString()))
             {
-                Debug.LogError("Another Reference to Scene " + scene.name + " (GUID: " + guid.ToString() + ") already exists!");
+                Debug.LogError($"Another Reference to Scene {scene.name} (GUID: guid.ToString() already exists!");
 
-                _sceneAsset = null;
+                _sceneAsset = GetSceneAsset(_target.sceneGuid);
+
                 return;
             }
 
@@ -51,8 +55,6 @@ namespace SceneReference
             EditorUtility.SetDirty(_target);
 
             AssetDatabase.SaveAssetIfDirty(_target);
-
-            _sceneAsset = null;
 
             AssetRenamer.RenameAsset(_target, scene.name + " Reference");
         }
@@ -66,18 +68,24 @@ namespace SceneReference
                 return;
             }
 
-            string scenePath = AssetDatabase.GUIDToAssetPath(guid);
-
-            SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
+            SceneAsset sceneAsset = GetSceneAsset(guid);
 
             if (sceneAsset == null)
             {
                 Debug.LogError($"There is no asset with {guid} GUID!");
                 return;
             }
+
             _sceneAsset = sceneAsset;
 
             SetSceneDataToReference(_sceneAsset);
+        }
+
+        private SceneAsset GetSceneAsset(string sceneGUID)
+        {
+            string scenePath = AssetDatabase.GUIDToAssetPath(sceneGUID);
+
+            return AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
         }
     }
 }

@@ -40,6 +40,8 @@ namespace SceneReference
             AssetDatabase.SaveAssetIfDirty(loadedSceneReference);
 
             AssetDatabase.Refresh();
+
+            Selection.activeObject = referenceToScene;
         }
 
         [MenuItem("Assets/Create/Scriptable Objects/Scene Reference", true)]
