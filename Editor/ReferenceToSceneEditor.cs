@@ -11,6 +11,7 @@ namespace SceneReference
     {
         private SceneAsset _sceneAsset;
         private ReferenceToScene _target;
+
         private void OnEnable()
         {
             _target = (ReferenceToScene)target;
@@ -20,6 +21,7 @@ namespace SceneReference
                 _sceneAsset = GetSceneAsset(_target.sceneGuid);
             }
         }
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
