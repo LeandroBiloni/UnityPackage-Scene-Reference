@@ -1,6 +1,6 @@
 {
   "name": "com.leandro_biloni.scene_reference",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "displayName": "Scene Reference",
   "description": "Custom Package to save a reference to the name of a scene and update it easily when scene name changes.",
   "keywords": [],
